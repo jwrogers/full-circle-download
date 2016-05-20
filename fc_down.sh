@@ -77,6 +77,12 @@ echo "# Downloading Issues of Full Circle Magazine #"
 echo "##############################################"
 echo
 
+# Add the date and time to the log files to seperate logs
+echo $(date) >> .sc_log
+echo >> .sc_log
+echo $(date) >> .sc_log_err
+echo >> .sc_log_err
+
 while [ true ];do
 	
 	# Create the url
