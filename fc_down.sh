@@ -1,10 +1,12 @@
 #!/bin/bash
 
 ## Setup Variables
+flag=true
 url=""
 url_prefix="http://dl.fullcirclemagazine.org/issue"
 url_suffix="_en.pdf"
-prefix="issues/"
+
+## If issue list doesn't exist -> create it
 if [ -e .issue_nos ];
 then
 	last_issue="$(tail -n1 .issue_nos)"
@@ -12,12 +14,19 @@ else
 	touch .issue_nos
 fi
 
+## If the prefix file doesn't exist -> create it
+prefix="issues/"
+if [ ! -d "$prefix" ];
+then
+	mkdir issues
+fi
+
 ## reset counter to the next issue
 if [ -z "$last_issue" ];
 then
 	counter=0
 else
-	counter=$last_issue+1
+	counter=$last_issue
 fi
 
 ########################################
@@ -26,9 +35,10 @@ fi
 function remote_exists {
 
 # Check if file exists with wget
-wget $url --spider -O- 2>/dev/null 1>/dev/null 
+wget $url --spider -O- 2>/dev/null
+ecode=$?
 
-if [ $? -eq 8 ];
+if [ "$ecode" -eq 8 ];
 then
 	return 1
 else
@@ -57,7 +67,7 @@ else
 	echo ERROR: $ecode
 	echo Issue: $counter ERROR: $ecode >> .sc_log_err
 fi
-
+}
 #################
 # Main Function #
 #################
@@ -68,13 +78,14 @@ echo "##############################################"
 echo
 
 while [ true ];do
-
+	
 	# Create the url
 	url=$url_prefix$counter$url_suffix
 	
 	# Check if a remote file exists
 	exist=$(remote_exists)
-	if [ ! $exist ];
+	
+	if [ $exist ];
 	then
 		echo No more issues available >> .sc_log
 		echo No more issues available
@@ -86,7 +97,7 @@ while [ true ];do
       	then 
       		remote_size=$(wget $url --spider -S -O- 2>&1 | sed -ne '/Content-Length/{s/.*: //;p}')
       		local_size=`stat --printf='%s' issues/issue"$counter"_en.pdf`
-      		
+
 		# If it has been downloaded but is smaller than remote file -> continue download
 		if [ "$local_size" -lt "$remote_size" ];
       		then
