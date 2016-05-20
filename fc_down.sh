@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Copyright (c) 2016, John William Rogers (github.com/jwrogers)
+# All Rights Reserved
+# This script is released under the BSD 3-Clause Licence
+# A copy of which can be found at github.com/jwrogers/full-circle-download/
+
+
 ## Setup Variables
 flag=true
 url=""
