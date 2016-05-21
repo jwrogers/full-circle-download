@@ -38,10 +38,10 @@ fi
 ########################################
 # Check if remote file exists function #
 ########################################
-function remote_exists {
+remote_exists() {
 
 # Check if file exists with wget
-wget $url --spider -O- 2>/dev/null
+wget $1 --spider -O- 2>/dev/null
 ecode=$?
 
 if [ "$ecode" -eq 8 ];
@@ -55,7 +55,7 @@ fi
 #####################
 # Download function #
 #####################
-function download {
+download() {
 
 printf "Downloading Issue %s\n" "$counter"
 
@@ -95,9 +95,7 @@ while [ true ];do
 	url=$url_prefix$counter$url_suffix
 	
 	# Check if a remote file exists
-	exist=$(remote_exists)
-	
-	if [ $exist ];
+	if ! remote_exists $url; 
 	then
 		echo No more issues available >> .sc_log
 		echo No more issues available
