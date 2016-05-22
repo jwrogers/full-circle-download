@@ -17,3 +17,6 @@ The script also creates three hidden files:
 2. `.sc_log`, a log of the activity of the script.
 3. `.sc_log_err`, a log of errors.
 
+### Future Plans
+* Ability to download a specified issue
+* Ability to download special issues
